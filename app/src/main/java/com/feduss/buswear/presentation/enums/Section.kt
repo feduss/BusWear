@@ -3,8 +3,8 @@ package com.feduss.buswear.presentation.enums
 sealed class Section(val baseRoute: String, val parametricRoute: String = "") {
     object Home: Section("home")
     object LineDirections: Section("lines","lines/{lineId}")
-    object LineStops: Section("lines","lines/{lineId}/{directionName}")
-    object LineTimes: Section("lines","lines/{lineId}/{directionName}/{stopName}")
+    object LineStops: Section("lines","lines/{lineId}/{lineDirection}")
+    object LineTimes: Section("lines","lines/{lineId}/{lineDirection}/{stopName}")
 
     fun withArgs(args: List<String>? = null, optionalArgs: Map<String, String>? = null): String {
         var destinationRoute = baseRoute

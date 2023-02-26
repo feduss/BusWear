@@ -1,9 +1,9 @@
-package com.feduss.buswear.presentation.lines.list
+package com.feduss.buswear.presentation.lines.stops
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,26 +16,34 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Text
-import com.feduss.buswear.presentation.enums.Section
 import com.feduss.buswear.presentation.lines.LoadingView
 
 @Composable
-fun LinesView(
-    viewModel: LinesViewModel = viewModel(),
+fun StopsView(
+    viewModel: StopsViewModel = viewModel(),
     navController: NavController
-    ) {
+) {
 
     val showLoadingBar by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(0.dp, 8.dp, 0.dp, 16.dp),
+            .padding(0.dp, 8.dp, 0.dp, 16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Linee CTM",
+            text = "Linea ${viewModel.lineId}",
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = "Direzione ${viewModel.lineDirection}",
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = "Fermate",
             textAlign = TextAlign.Center
         )
         Row(
@@ -47,24 +55,14 @@ fun LinesView(
         if(showLoadingBar) {
             LoadingView()
         } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(viewModel.lines) { line ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        onClick = {
-                            val args = listOf(line)
-                            navController.navigate(Section.LineDirections.withArgs(args))
-                        }
-                    ) {
-                        Text(text = "Linea $line")
-                    }
+            viewModel.stops.forEach() { stop ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    onClick = { }
+                ) {
+                    Text(text = stop)
                 }
             }
         }
-
     }
 }

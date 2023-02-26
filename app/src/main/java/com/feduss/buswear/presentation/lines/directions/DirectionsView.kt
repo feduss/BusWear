@@ -1,28 +1,31 @@
 package com.feduss.buswear.presentation.lines.directions
 
-import android.database.sqlite.SQLiteDatabase
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.wear.compose.material.*
+import androidx.navigation.NavController
+import androidx.wear.compose.material.Card
+import androidx.wear.compose.material.Text
+import com.feduss.buswear.presentation.enums.Section
+import com.feduss.buswear.presentation.lines.LoadingView
 
 @Composable
 fun DirectionsView(
     viewModel: DirectionsViewModel = viewModel(),
-    db: SQLiteDatabase
+    navController: NavController
     ) {
 
-    viewModel.setDirections(db)
+    val showLoadingBar by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
@@ -46,14 +49,20 @@ fun DirectionsView(
                 .height(1.dp)
                 .background(Color.White)
         ){}
-        viewModel.directions.forEach() { direction ->
-            Card(
-                modifier = Modifier.fillMaxWidth(0.8f),
-                onClick = { }
-            ) {
-                Text(text = direction)
+        if(showLoadingBar) {
+            LoadingView()
+        } else {
+            viewModel.directions.forEach() { direction ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    onClick = {
+                        val args = listOf(viewModel.lineId, direction)
+                        navController.navigate(Section.LineStops.withArgs(args))
+                    }
+                ) {
+                    Text(text = direction)
+                }
             }
         }
-
     }
 }
