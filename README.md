@@ -132,5 +132,5 @@ cat load-gtfs.sql | sqlite3 buswear.db
 
 ## References
 
-- https://developers.google.com/transit/gtfs?hl=it
+- https://developers.google.com/transit/gtfs?hl=en
 - https://www.ctmcagliari.it/opendata/
