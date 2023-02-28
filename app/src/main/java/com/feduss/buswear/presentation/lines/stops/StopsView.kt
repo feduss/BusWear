@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Text
 import com.feduss.buswear.presentation.lines.LoadingView
+import com.feduss.buswear.model.StopsViewModel
 
 @Composable
 fun StopsView(

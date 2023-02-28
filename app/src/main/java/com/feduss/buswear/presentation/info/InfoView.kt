@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Text
+import com.feduss.buswear.model.InfoViewModel
 
 @Composable
 fun InfoView(viewModel: InfoViewModel = viewModel()) {

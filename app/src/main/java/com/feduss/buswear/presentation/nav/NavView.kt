@@ -13,25 +13,28 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
-import com.feduss.buswear.presentation.enums.Params
-import com.feduss.buswear.presentation.enums.Section
-import com.feduss.buswear.presentation.favorites.FavoritesLinesView
+import com.feduss.buswear.enums.Params
+import com.feduss.buswear.enums.Section
+import com.feduss.buswear.view.favorites.FavoritesLinesView
 import com.feduss.buswear.presentation.info.InfoView
 import com.feduss.buswear.presentation.lines.directions.DirectionsView
-import com.feduss.buswear.presentation.lines.directions.DirectionsViewModel
-import com.feduss.buswear.presentation.lines.directions.DirectionsViewModelFactory
+import com.feduss.buswear.model.DirectionsViewModel
+import com.feduss.buswear.factory.DirectionsViewModelFactory
 import com.feduss.buswear.presentation.lines.list.LinesView
-import com.feduss.buswear.presentation.lines.list.LinesViewModelFactory
+import com.feduss.buswear.factory.LinesViewModelFactory
 import com.feduss.buswear.presentation.lines.stops.StopsView
-import com.feduss.buswear.presentation.lines.stops.StopsViewModel
-import com.feduss.buswear.presentation.lines.stops.StopsViewModelFactory
+import com.feduss.buswear.model.StopsViewModel
+import com.feduss.buswear.factory.StopsViewModelFactory
 import com.feduss.buswear.presentation.map.MapView
+import com.feduss.buswear.model.NavViewModel
+import com.feduss.buswear.room.AppDatabase
 import com.google.android.horologist.compose.pager.PagerScreen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NavView(
     context: Context,
+    db: AppDatabase,
     viewModel: NavViewModel = viewModel(),
     startDestination: String = Section.Home.baseRoute
 ) {
@@ -49,7 +52,7 @@ fun NavView(
                     when(selectedPage) {
                         0 -> LinesView(
                             viewModel = viewModel(
-                                factory = LinesViewModelFactory(db = viewModel.getReadableDb(context))
+                                factory = LinesViewModelFactory(db = db)
                             ),
                             navController = navController
                         )
@@ -70,7 +73,7 @@ fun NavView(
                 val directionsViewModel: DirectionsViewModel = viewModel(
                     factory = DirectionsViewModelFactory(
                         lineId = lineId,
-                        db = viewModel.getReadableDb(context)
+                        db = db
                     )
                 )
                 DirectionsView(
@@ -92,7 +95,7 @@ fun NavView(
                     factory = StopsViewModelFactory(
                         lineId = lineId,
                         lineDirection = lineDirection,
-                        db = viewModel.getReadableDb(context)
+                        db = db
                     )
                 )
                 StopsView(

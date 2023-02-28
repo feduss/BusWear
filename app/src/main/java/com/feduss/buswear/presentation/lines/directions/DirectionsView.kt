@@ -16,8 +16,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Text
-import com.feduss.buswear.presentation.enums.Section
+import com.feduss.buswear.enums.Section
 import com.feduss.buswear.presentation.lines.LoadingView
+import com.feduss.buswear.model.DirectionsViewModel
 
 @Composable
 fun DirectionsView(
