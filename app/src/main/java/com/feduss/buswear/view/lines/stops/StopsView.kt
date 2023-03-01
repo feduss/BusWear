@@ -1,4 +1,4 @@
-package com.feduss.buswear.presentation.lines.directions
+package com.feduss.buswear.view.lines.stops
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,13 +18,14 @@ import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Text
 import com.feduss.buswear.enums.Section
 import com.feduss.buswear.presentation.lines.LoadingView
-import com.feduss.buswear.model.DirectionsViewModel
+import com.feduss.buswear.model.StopsViewModel
+import java.net.URLEncoder
 
 @Composable
-fun DirectionsView(
-    viewModel: DirectionsViewModel = viewModel(),
+fun StopsView(
+    viewModel: StopsViewModel = viewModel(),
     navController: NavController
-    ) {
+) {
 
     val showLoadingBar by viewModel.isLoading.collectAsState()
 
@@ -41,7 +42,11 @@ fun DirectionsView(
             textAlign = TextAlign.Center
         )
         Text(
-            text = "Direzioni",
+            text = "Direzione ${viewModel.lineDirection}",
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = "Fermate",
             textAlign = TextAlign.Center
         )
         Row(
@@ -53,15 +58,17 @@ fun DirectionsView(
         if(showLoadingBar) {
             LoadingView()
         } else {
-            viewModel.directions.forEach() { direction ->
+            viewModel.stopModels.forEach() { stop ->
                 Card(
                     modifier = Modifier.fillMaxWidth(0.8f),
                     onClick = {
-                        val args = listOf(viewModel.lineId, direction)
-                        navController.navigate(Section.LineStops.withArgs(args))
+                        //The direction is encoded because it can contain spaces
+                        val encodedDirection = URLEncoder.encode(viewModel.lineDirection, Charsets.UTF_8.name()).toString()
+                        val args = listOf(viewModel.lineId, encodedDirection, stop.id)
+                        navController.navigate(Section.LineTimes.withArgs(args))
                     }
                 ) {
-                    Text(text = direction)
+                    Text(text = stop.name)
                 }
             }
         }

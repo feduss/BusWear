@@ -1,10 +1,10 @@
 package com.feduss.buswear.enums
 
 sealed class Section(val baseRoute: String, val parametricRoute: String = "") {
-    object Home: Section("home")
+    object LinesList: Section("lines")
     object LineDirections: Section("lines","lines/{lineId}")
-    object LineStops: Section("lines","lines/{lineId}/{lineDirection}")
-    object LineTimes: Section("lines","lines/{lineId}/{lineDirection}/{stopName}")
+    object LineStops: Section("lines","lines/{${Params.LineId.name}}/{${Params.LineDirection.name}}")
+    object LineTimes: Section("lines","lines/{${Params.LineId.name}}/{${Params.LineDirection.name}}/{${Params.StopId.name}}")
 
     fun withArgs(args: List<String>? = null, optionalArgs: Map<String, String>? = null): String {
         var destinationRoute = baseRoute
@@ -15,8 +15,8 @@ sealed class Section(val baseRoute: String, val parametricRoute: String = "") {
         }
         optionalArgs?.let { optionalArgsNotNull ->
             destinationRoute+= "?"
-            optionalArgsNotNull.onEachIndexed { index, (optionalArgName, optionaArgValue) ->
-                destinationRoute += "$optionalArgName=$optionaArgValue"
+            optionalArgsNotNull.onEachIndexed { index, (optionalArgName, optionalArgValue) ->
+                destinationRoute += "$optionalArgName=$optionalArgValue"
 
                 if (optionalArgsNotNull.count() > 1 && index < optionalArgsNotNull.count() - 1) {
                     destinationRoute += "&"

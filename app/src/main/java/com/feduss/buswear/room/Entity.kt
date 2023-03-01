@@ -83,8 +83,8 @@ data class FareAttributes(
     @ColumnInfo(name = "transfer_duration") val transferDuration: String?
 )
 
-@Entity(tableName = "Calendar_dates")
-data class CalendarDates(
+@Entity
+data class Calendar_Dates(
     @PrimaryKey @ColumnInfo(name = "id") val id: Int,
     @ColumnInfo(name = "service_id") val serviceId: String?,
     @ColumnInfo(name = "date") val date: String?,

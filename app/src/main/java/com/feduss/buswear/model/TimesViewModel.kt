@@ -9,27 +9,24 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class StopsViewModel(
-    val lineId: String, val lineDirection: String,
-    private val db: AppDatabase
-): ViewModel() {
+class TimesViewModel(val lineId: String, val stopId: String, private val db: AppDatabase): ViewModel() {
 
-    var stopModels = ArrayList<StopModel>()
+    var times = ArrayList<String>()
     private var _isLoading = MutableStateFlow(true)
     var isLoading = _isLoading.asStateFlow()
 
     init {
         viewModelScope.launch {
-            getStops()
+            getScheduledTimes()
         }
     }
 
-    private suspend fun getStops() = withContext(Dispatchers.IO) {
+    private suspend fun getScheduledTimes() = withContext(Dispatchers.IO) {
 
-        stopModels = ArrayList(
-            db.linesDao().getStops(
+        times = ArrayList(
+            db.linesDao().getScheduledTimes(
                 lineId = lineId,
-                lineDirection = lineDirection
+                stopId = stopId
             )
         )
         _isLoading.value = false
