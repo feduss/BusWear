@@ -14,50 +14,58 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.Text
 import com.feduss.buswear.model.TimesViewModel
 import com.feduss.buswear.presentation.lines.LoadingView
+import com.google.android.horologist.compose.layout.ScalingLazyColumn
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.navscaffold.ScrollableScaffoldContext
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun TimesView(
-    viewModel: TimesViewModel = viewModel()
+    viewModel: TimesViewModel = viewModel(),
+    scrollableContext: ScrollableScaffoldContext
     ) {
 
     val showLoadingBar by viewModel.isLoading.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(0.dp, 8.dp, 0.dp, 16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    ScalingLazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        columnState = scrollableContext.columnState,
     ) {
-        Text(
-            text = "Orari",
-            textAlign = TextAlign.Center
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.White)
-        ){}
         if(showLoadingBar) {
-            LoadingView()
+            item {
+                LoadingView()
+            }
         } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(viewModel.times) { time ->
-                    Text(
-                        text = time,
-                        color = Color(("#FFFFFFFF".toColorInt()))
-                    )
-                }
+            item {
+                Text(
+                    text = "Linea ${viewModel.lineId}",
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            item {
+                Text(
+                    text = viewModel.lineDirection,
+                    textAlign = TextAlign.Center
+                )
+            }
+            item {
+                Text(
+                    text = viewModel.stop.name,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            items(viewModel.times) { time ->
+                Text(
+                    text = time,
+                    color = Color(("#FFFFFFFF".toColorInt()))
+                )
             }
         }
-
     }
 }

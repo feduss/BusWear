@@ -18,6 +18,7 @@ interface LinesDao {
     )
     fun getDirection(lineId: String): List<String>
 
+    //TODO to fix
     @Query("SELECT DISTINCT s.stop_id as id, s.stop_name as name " +
             "FROM Stops s " +
             "WHERE s.stop_id " +
@@ -31,10 +32,12 @@ interface LinesDao {
             "       WHERE t.route_id = :lineId" +
             "       AND t.trip_headsign LIKE :lineDirection " +
             "       )" +
+            "   ORDER BY st.stop_sequence" +
             "   )"
     )
     fun getStops(lineId: String, lineDirection: String): List<StopModel>
 
+    //TODO: to fix
     //TODAY times
     @Query("SELECT st.arrival_time " +
             "FROM Stop_times st " +

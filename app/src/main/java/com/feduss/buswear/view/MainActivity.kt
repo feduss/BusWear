@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.feduss.buswear.model.MainActivityViewModel
-import com.feduss.buswear.presentation.nav.NavView
+import com.feduss.buswear.view.nav.NavView
 
 class MainActivity : ComponentActivity() {
 

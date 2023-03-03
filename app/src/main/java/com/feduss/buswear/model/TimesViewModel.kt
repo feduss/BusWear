@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TimesViewModel(val lineId: String, val stopId: String, private val db: AppDatabase): ViewModel() {
+class TimesViewModel(val lineId: String, val lineDirection: String, val stop: StopModel, private val db: AppDatabase): ViewModel() {
 
     var times = ArrayList<String>()
     private var _isLoading = MutableStateFlow(true)
@@ -26,7 +26,7 @@ class TimesViewModel(val lineId: String, val stopId: String, private val db: App
         times = ArrayList(
             db.linesDao().getScheduledTimes(
                 lineId = lineId,
-                stopId = stopId
+                stopId = stop.id
             )
         )
         _isLoading.value = false

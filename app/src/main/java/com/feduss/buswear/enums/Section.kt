@@ -4,7 +4,7 @@ sealed class Section(val baseRoute: String, val parametricRoute: String = "") {
     object LinesList: Section("lines")
     object LineDirections: Section("lines","lines/{lineId}")
     object LineStops: Section("lines","lines/{${Params.LineId.name}}/{${Params.LineDirection.name}}")
-    object LineTimes: Section("lines","lines/{${Params.LineId.name}}/{${Params.LineDirection.name}}/{${Params.StopId.name}}")
+    object LineTimes: Section("lines","lines/{${Params.LineId.name}}/{${Params.LineDirection.name}}/{${Params.Stop.name}}")
 
     fun withArgs(args: List<String>? = null, optionalArgs: Map<String, String>? = null): String {
         var destinationRoute = baseRoute

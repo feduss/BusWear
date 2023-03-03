@@ -14,57 +14,60 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.Text
 import com.feduss.buswear.enums.Section
 import com.feduss.buswear.presentation.lines.LoadingView
 import com.feduss.buswear.model.StopsViewModel
+import com.google.android.horologist.compose.layout.ScalingLazyColumn
+import com.google.android.horologist.compose.navscaffold.ExperimentalHorologistComposeLayoutApi
+import com.google.android.horologist.compose.navscaffold.ScrollableScaffoldContext
+import com.google.gson.Gson
 import java.net.URLEncoder
 
+@OptIn(ExperimentalHorologistComposeLayoutApi::class)
 @Composable
 fun StopsView(
     viewModel: StopsViewModel = viewModel(),
-    navController: NavController
+    navController: NavController,
+    scrollableContext: ScrollableScaffoldContext
 ) {
 
     val showLoadingBar by viewModel.isLoading.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(0.dp, 8.dp, 0.dp, 16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = "Linea ${viewModel.lineId}",
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Direzione ${viewModel.lineDirection}",
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Fermate",
-            textAlign = TextAlign.Center
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.White)
-        ){}
+    ScalingLazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        columnState = scrollableContext.columnState,
+    ){
         if(showLoadingBar) {
-            LoadingView()
+            item {
+                LoadingView()
+            }
         } else {
-            viewModel.stopModels.forEach() { stop ->
+            item {
+                Text(
+                    text = "Linea ${viewModel.lineId}",
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            item {
+                Text(
+                    text = viewModel.lineDirection,
+                    textAlign = TextAlign.Center
+                )
+            }
+            items(viewModel.stopModels) { stop ->
                 Card(
                     modifier = Modifier.fillMaxWidth(0.8f),
                     onClick = {
                         //The direction is encoded because it can contain spaces
-                        val encodedDirection = URLEncoder.encode(viewModel.lineDirection, Charsets.UTF_8.name()).toString()
-                        val args = listOf(viewModel.lineId, encodedDirection, stop.id)
+                        val encodedDirection =
+                            URLEncoder.encode(viewModel.lineDirection, Charsets.UTF_8.name())
+                                .toString()
+                        val encodedStop = Gson().toJson(stop)
+                        val args = listOf(viewModel.lineId, encodedDirection, encodedStop)
                         navController.navigate(Section.LineTimes.withArgs(args))
                     }
                 ) {
